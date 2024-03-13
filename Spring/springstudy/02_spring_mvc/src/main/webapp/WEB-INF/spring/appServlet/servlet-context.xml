@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+  <!-- 
+    <resources> 태그
+    1. 정적 자원(image, css, js 등)을 관리하는 태그이다.
+    2. 속성
+      1) mapping : 주소가 /contextPath/resources/** 인 주소 (*이거 하나짜리는 곧바로 파일이 나와야 함 ** 두개짜리는 그 사이에 폴더를 끼움)
+      2) location : mapping 과 연결할 실제 디렉터리 이름
+      + /prj02(contextPath)가 의미하는 실제 주소는 webapp임!!! contexpPath 경로의 실제위치는 webapp 이다.
+      + resources란 폴더이름은 변경 가능함. 그냥 두고 다른이름의 폴더를 하나 추가하는것도 가능하고! (태그(<resources>)랑 경로가 중요하다 이거죠)
+   -->  
+  
+	<resources mapping="/resources/**" location="/resources/" />
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+  <!-- actionForward 같은 작업을 하는 친구...경로에 개입한다. view 라는 이름답게 view에 관여. ex) board.list 만 적어줘도 앞에 web-inf 붙여주고 뒤에 .jsp 붙여주고... 너가 말하는 위치가 여기리라...해준다. -->
+	<!-- 따라서 jsp 파일을 만들어야 하는 위치는 views 폴더 아래라는 것도 알 수 있음. 그리고 확장자 .jsp 붙여주면 안된다는 것도...(알아서 붙여주니까) -->
+  
+  <!-- InternalResourceViewResolver 클래스 
+       1. 컨트롤러가 응답하는 jsp의 경로를 결정한다.
+       2. 필드
+         1) prefix : 컨트롤러가 응답하는 jsp 경로 앞에 추가한다.
+         2) suffix : 컨트롤러가 응답하는 jsp 경로 뒤에 추가한다.
+       3. 예시
+         1) 컨트롤러가 응답한 jsp 경로 : board/list
+         2) 뷰 리졸버가 응답한 jsp 경로 : /WEB-INF/views/board/list.jsp
+         
+             
+  -->
+  <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+  
+  
+	<!-- 컴포넌트를 찾는 기본 패키지 위치 : 중요함! 이름바꾸면 베이스패키지 바뀜. 이러면 어노테이션 위치 등등이 바뀌기 때문에 스프링이 안돈다...-->
+	<context:component-scan base-package="com.gdu.prj02" />
+	
+	
+	
+</beans:beans>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean class="com.gdu.prj01.xml02.Student"
+           id="student"
+        scope="singleton">
+  
+    <property name="scores">          <!-- List 만들기 -->
+      <list>
+        <value>90</value>      
+        <value>91</value>      
+        <value>92</value>      <!-- 어제 만든 property 도 이렇게 value 태그로 만들 수 있지만...!(그냥 value 하나만 띡 두면 된다) 구욷이 이렇게 손 많이 가는 방법으로 할 필요 업죵 -->
+      </list>
+    </property>
+    
+    <property name="contacts">             <!--Set 만들기 -->
+      <set>
+        <value>010-1111-2222</value>      
+        <value>02-3333-4444</value>      
+      </set>
+    </property>
+    
+    <property name="friends">                <!-- Map 만들기 -->
+      <map>
+        <entry key="동네친구" value="길동"></entry>
+        <entry key="운동친구" value="또치"></entry>
+      </map>
+    </property>
+    
+    
+  
+  
+  
+  </bean>
+
+
+</beans>

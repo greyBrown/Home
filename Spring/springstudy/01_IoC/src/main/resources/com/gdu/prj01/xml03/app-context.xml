@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!-- 깜빡하기 쉬운거!!! 이거 내부적으로 getter setter 가 사용되니까 롬복을 깜빡한다? 뭐야 안되자나??  -->
+
+  <bean class="com.gdu.prj01.xml03.MyConnection"
+           id="myConnection"
+        scope="singleton">
+    <property name="driver" value="oracle.jdbc.OracleDriver"/>
+    <property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+    <property name="user" value="GD"/>
+    <property name="password" value="1111"/>
+  </bean>
+
+  <bean class="com.gdu.prj01.xml03.MyDao"
+           id="myDao"
+        scope="singleton">
+    <property name="myConnection" ref="myConnection"></property>  <!-- 다른 빈을 값으로 가질 때는 ref를 이용, ref의 값은 다른 bean의 아이디다. -->       
+    <!--  이렇게 여기서 myDao 처리를 해주면 myDao에서 getbean을 해줄 필요가 없음. (지금은 수업상 두 코드 모두 있는 형태(필요 없어진 자바 코드는 주석처리함). 이 property가 있으면 getbean이 필요없다는 이야기. 왜? 여기서 했으니까.) -->    
+  </bean>  
+
+  <bean class="com.gdu.prj01.xml03.MyService"
+           id="myService"
+        scope="singleton">
+    <property name="myDao" ref="myDao"></property>
+  </bean>
+
+  <bean class="com.gdu.prj01.xml03.MyController"
+           id="myController"
+           scope="singleton">
+    <property name="myService" ref="myService"></property>       
+  </bean>
+  
+</beans>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <!-- main 이 아니라 이 appCTX.xml 파일이 핵심! -->
+  
+  <!-- 객체(object)는 빈(bean)이라고 부른다. 클래스가 타입, id가 객체명이라고 할 수 있음. 스코프는 생략가능(싱글톤이 디폴트)   -->
+  
+  <!-- 왜 코드가 지금보기에는 길어지기만 하는데 쓰는가? 
+  -> BoardDao 객체를 사용한다고 생각할 때, new BoardDao 없이 스프링에 싱글톤으로 제작해둔 객체를 빼와 쓰기 때문에 코드가 간편해짐 -->
+
+  <!-- Calculator calculator = new Calculator(); -->
+  <bean class="com.gdu.prj01.xml01.Calculator" 
+      id="calculator"
+      scope="singleton"/>
+
+   <!-- 
+    Computer computer1 = new Computer();
+    computer1.setModel("gram");
+    computer1.setPrice(200);
+    computer1.setCalculator(new Calculator());
+   -->
+   
+   <bean class="com.gdu.prj01.xml01.Computer"
+            id="computer1"
+         scope="singleton">
+   <property name="model" value="gram"/>      
+   <property name="price" value="200"/>      
+   <property name="calculator" ref="calculator"/>      
+   </bean>
+   
+   <!-- 
+    Computer computer2 = new Computer("macbook", 300, new Calculator());
+    constructor-arg 는 순서 맞춰서 넣어야함. 생성자 순서대로 받는거라서...순서가 뒤바뀔 수 없음.
+    -->
+  <bean class="com.gdu.prj01.xml01.Computer"
+           id="computer2"
+        scope="singleton">
+     <constructor-arg value="macbook"/>    
+     <constructor-arg value="300"/>    
+     <constructor-arg ref="calculator"/>    
+  </bean>
+  
+     
+
+</beans>
+
