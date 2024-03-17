@@ -5,17 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Builder
-
 public class StudentDto {
 
 	String name;
 	int korean;
 	int english;
 	int math;
-	
 	
 }

@@ -14,8 +14,10 @@
 <h1>신규학생등록화면</h1>
 
 
-<form>
-<div>이름 <input type="text" name="studentName"></div>
+<form id="frm-register"
+        method="GET"
+        action="${contextPath}/student/register.do">
+<div>이름 <input type="text" name="name"></div>
 <div>국어 <input type="text" name="korean"></div>
 <div>영어 <input type="text" name="english"></div>
 <div>수학 <input type="text" name="math"></div>

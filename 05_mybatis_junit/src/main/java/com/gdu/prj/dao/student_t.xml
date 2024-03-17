@@ -7,7 +7,7 @@
 
   <insert id="insertStudent"
           parameterType="com.gdu.prj.dto.StudentDto">
-    INSERT INTO BOARD_T (
+    INSERT INTO STUDENT_T (
         STUDENT_NO
         , NAME
         , KOREAN

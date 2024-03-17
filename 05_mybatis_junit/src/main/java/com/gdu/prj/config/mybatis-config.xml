@@ -16,7 +16,7 @@
   </environments>
 
 <mappers>
-  <mapper resource="com/gdu/prj/dao/board_t.xml"/>
+  <mapper resource="com/gdu/prj/dao/student_t.xml"/>
   
   
   

@@ -30,7 +30,7 @@ public class StudentServiceImpl implements StudentService {
 	    if(insertCount == 1) {
 	      view = request.getContextPath() + "/student/list.do"; 
 	    } else if(insertCount ==0) {
-	      view = request.getContextPath() + "/main.do";
+	      view = request.getContextPath() + "/student/list.do";
 	    }
 	    //INSERT 이후 이동은 redirect 이다.
 	    return new ActionForward(view, true);
