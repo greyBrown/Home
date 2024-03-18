@@ -21,5 +21,19 @@
       , #{math}
     ) 
   </insert>
+  
+  <update id="updateStudent"
+          parameterType="com.gdu.prj.dto.StudentDto">
+          
+	     UPDATE STUDENT_T SET 
+	       NAME = #{name}
+	     , KOREAN = #{korean}
+	     , ENGLISH = #{english}
+	     , MATH = #{math}
+	     WHERE STUDENT_NO = #{studentNo}
+	          
+          
+          
+  </update>        
 
 </mapper>

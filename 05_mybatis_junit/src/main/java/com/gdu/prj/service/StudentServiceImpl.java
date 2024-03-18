@@ -25,7 +25,7 @@ public class StudentServiceImpl implements StudentService {
 				               .english(english)
 				               .math(math)
 				               .build();
-		int insertCount = studentDao.insertBoard(student);
+		int insertCount = studentDao.insertStudent(student);
 		String view = null;
 	    if(insertCount == 1) {
 	      view = request.getContextPath() + "/student/list.do"; 
@@ -38,8 +38,27 @@ public class StudentServiceImpl implements StudentService {
 
 	@Override
 	public ActionForward modifyStudent(HttpServletRequest request) {
-		// TODO Auto-generated method stub
-		return null;
+		int studentNo = Integer.parseInt(request.getParameter("studentNo"));
+		String name = request.getParameter("name");
+		int korean = Integer.parseInt(request.getParameter("korean"));
+		int english = Integer.parseInt(request.getParameter("english"));
+		int math = Integer.parseInt(request.getParameter("math"));
+		StudentDto student = StudentDto.builder()
+				               .studentNo(studentNo)
+				               .name(name)
+				               .korean(korean)
+				               .english(english)
+				               .math(math)
+				               .build();
+		
+		int updateCount = studentDao.updateStudent(student);
+		String view = null;
+		if(updateCount == 1) {
+		      view = request.getContextPath() + "/student/list.do"; 
+		    } else if(updateCount ==0) {
+		      view = request.getContextPath() + "/student/list.do";
+		    }
+		return new ActionForward(view, true);
 	}
 
 	@Override

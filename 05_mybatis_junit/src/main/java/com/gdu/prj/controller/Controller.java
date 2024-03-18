@@ -37,7 +37,17 @@ public class Controller extends HttpServlet {
 	        
 	    case"/student/register.do":
 	    	actionForward = studentService.addStudent(request);
+	    	
+	    case"/student/modify.do":
+	    	actionForward = studentService.modifyStudent(request);
+	    	
+	    	
+	    	
+	    	
+	    	
 	    }
+	    
+	    	
 	    
 	    
 	    if(actionForward != null) {

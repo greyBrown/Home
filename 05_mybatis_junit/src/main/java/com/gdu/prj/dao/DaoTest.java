@@ -21,7 +21,7 @@ public class DaoTest {
 	                        .math(80)
 	                      .build();
 	    
-	    int insertCount = studentDao.insertBoard(student);
+	    int insertCount = studentDao.insertStudent(student);
 	    
 	    assertEquals(1, insertCount);
 	    

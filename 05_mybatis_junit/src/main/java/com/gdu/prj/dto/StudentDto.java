@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class StudentDto {
-
+    int studentNo;
 	String name;
 	int korean;
 	int english;

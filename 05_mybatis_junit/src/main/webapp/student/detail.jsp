@@ -7,6 +7,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
 <style>
 span > *{
 margin:2px;
@@ -23,9 +25,11 @@ background-color:lightgray;
 
 <h1>학생 상세 조회</h1>
 
-<form>
-<div>학번 <input type="text" name="studentNo"></div>
-<div>이름 <input type="text" name="studentName"></div>
+<form id="frm-btn"
+        method="GET"
+        action="${contextPath}/student/modify.do">
+<div>학번 <input type="text" name="studentNo"  ></div>
+<div>이름 <input type="text" name="name"></div>
 <div>국어 <input type="text" name="korean"></div>
 <div>영어 <input type="text" name="english"></div>
 <div>수학 <input type="text" name="math"></div>
@@ -34,11 +38,27 @@ background-color:lightgray;
 
 <hr>
 
-<span><button type="submit">수정하기</button> <button type="button">목록보기</button></span> 
+<span><button type="submit" id="btn-modify">수정하기</button> 
+<button type="button" id="btn-list">목록보기</button></span> 
 
 </form>
 
+<script>
+  const frmBtn = $('#frm-btn');
+  const btnModify = $('#btn-modify');
+  const btnList = $('#btn-list');
+  
+  btnModify.on('click', (evt)=>{
+	  frmBtn.attr('action', '${contextPath}/student/modify.do');
+	  frmBtn.submit();
+  })
+  
+  btnList.on('click', (evt)=>{
+		  frmBtn.attr('action', '${contextPath}/student/list.do');
+		  frmBtn.submit();
+  })
 
+</script>
 
 
 
