@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gdu.semiby4.mapper.UserMapper">
+
+  <select id="getUserByMap"
+          parameterType="Map"
+          resultType="UserDto">
+    SELECT USER_NO, EMPLOYEE_ID, PW, EMAIL, NAME, GENDER, MOBILE, PW_MODIFY_DT, SIGNUP_DT
+      FROM USER_T
+    <where>
+      <if test="employeeId!=null">EMPLOYEE_ID = #{employeeId}</if>
+      <if test="pw!=null">AND PW = #{pw}</if>
+    </where>
+  </select>
+
+  <insert id="insertUser"
+          parameterType="UserDto">
+    INSERT INTO USER_T (
+	    USER_NO
+	  , EMPLOYEE_ID
+	  , PW
+	  , EMAIL
+	  , NAME
+	  , GENDER
+	  , MOBILE
+	  , PW_MODIFY_DT
+	  , SIGNUP_DT
+    ) VALUES (
+        USER_SEQ.NEXTVAL
+      , #{employeeId}
+      , #{pw}
+	  , #{email}
+      , #{name}
+      , #{gender}
+      , #{mobile}
+      , CURRENT_DATE
+      , CURRENT_DATE
+    )
+  </insert>
+
+  <delete id="deleteUser">
+    DELETE
+      FROM USER_T
+     WHERE USER_NO = #{userNo}
+  </delete>
+</mapper>
