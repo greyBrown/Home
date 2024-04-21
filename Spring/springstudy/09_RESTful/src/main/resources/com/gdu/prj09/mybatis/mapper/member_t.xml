@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gdu.prj09.mybatis.mapper.member_t">
+
+<!-- AddressDTO 의 member 안에 select문에서 필요한 해당 필드가 있다고 명시해주는 작업 --> 
+<!-- id는 pk 일반칼럼은 result dto 안의 dto 는 association -->
+  <resultMap type="AddressDto" id="AddressMap">
+    <id     column="ADDRESS_NO"     property="addressNo"/>
+    <result column="ZONECODE"       property="zonecode"/>
+    <result column="ADDRESS"        property="address"/>
+    <result column="DETAIL_ADDRESS" property="detailAddress"/>
+    <result column="EXTRA_ADDRESS"  property="extraAddress"/>
+    <association javaType="MemberDto" property="member">
+      <id     column="MEMBER_NO" property="memberNo"/>
+      <result column="EMAIL"     property="email"/>
+      <result column="NAME"      property="name"/>
+      <result column="GENDER"    property="gender"/>
+    </association>
+  </resultMap>
+
+  <insert id="insertMember"
+          parameterType="MemberDto">
+    <selectKey keyProperty="memberNo" order="BEFORE" resultType="int">
+    <!-- insert 전에(Before) 시퀀스 값을 빼서 memberDto 의 memberNo에 저장이 된다. -->
+      SELECT MEMBER_SEQ.NEXTVAL
+        FROM DUAL
+    </selectKey>
+    INSERT INTO MEMBER_T (
+        MEMBER_NO
+      , EMAIL
+      , NAME
+      , GENDER
+    ) VALUES (
+        #{memberNo}
+      , #{email}
+      , #{name}
+      , #{gender}
+    )
+  </insert>
+  
+  <insert id="insertAddress"
+          parameterType="AddressDto">
+    INSERT INTO ADDRESS_T (
+        ADDRESS_NO
+      , ZONECODE
+      , ADDRESS
+      , DETAIL_ADDRESS
+      , EXTRA_ADDRESS
+      , MEMBER_NO
+    ) VALUES (
+        ADDRESS_SEQ.NEXTVAL
+      , #{zonecode}
+      , #{address}
+      , #{detailAddress}
+      , #{extraAddress}
+      , #{member.memberNo}
+    )
+  </insert>
+  
+  <update id="updateMember"
+          parameterType="Map">
+   UPDATE MEMBER_T
+      SET NAME = #{name}
+        , GENDER = #{gender}
+    WHERE MEMBER_NO = #{memberNo}    
+  </update>
+  
+  <update id="updateAddress"
+          parameterType="Map">
+   UPDATE ADDRESS_T
+      SET ZONECODE = #{zonecode}
+        , ADDRESS = #{address}
+        , DETAIL_ADDRESS = #{detailAddress}
+        , EXTRA_ADDRESS = #{extraAddress}
+    WHERE MEMBER_NO = #{memberNo} 
+  <!-- 지금은 멤버 하나당 주소가 1개지만, 나중에 멤바당 주소가 여러개가 된다면 조건절을 다르게 줘야 함.
+   1:M 관계의 구성이라면 WHERE ADDRESS_NO = #{addressNo} 이렇게 줘야지 모든 주소가 다 바뀌지 않음. 화면은 대표주소가 따로있고 
+   다른 자잘한 주소들은 따로 있는 그런 모양새. 1:M 에서 update 바꿀 주소 where 주소=기존주소 인거 찾아서 바꿔야지 
+   멤버=멤버면 다른 주소 1 2 3 다 바뀐다는 이야기~   -->
+              
+  </update>
+  
+  <delete id="deleteMember">
+  DELETE
+    FROM MEMBER_T
+   WHERE MEMBER_NO = #{memberNo} 
+  
+  </delete>
+  
+  <delete id="deleteMembers">
+  DELETE
+    FROM MEMBER_T
+   WHERE MEMBER_NO
+   <foreach collection="list" item ="memberNo" open="IN(" separator="," close=")">
+    #{memberNo}   
+   </foreach>
+  </delete>
+  
+  
+  <select id="getTotalMemberCount"
+          resultType="int">
+    SELECT COUNT(*)
+      FROM MEMBER_T        
+  </select>
+  
+  <select id="getMemberList"
+          parameterType="Map"
+          resultMap="AddressMap">
+    SELECT MEMBER_NO, EMAIL, NAME, GENDER, ADDRESS_NO, ZONECODE, ADDRESS, DETAIL_ADDRESS, EXTRA_ADDRESS
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY M.MEMBER_NO DESC) AS RN
+                 , M.MEMBER_NO, M.EMAIL, M.NAME, M.GENDER
+                 , A.ADDRESS_NO, A.ZONECODE, A.ADDRESS, A.DETAIL_ADDRESS, A.EXTRA_ADDRESS
+              FROM MEMBER_T M LEFT JOIN ADDRESS_T A
+                ON M.MEMBER_NO = A.MEMBER_NO)
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <!-- 만약 파라미터가 int, String 이 동시에 온다..? 어차피 이런건 생략가능하니까 생략하고  #{param1} #{param2} 요렇게 쓰는 방식 있음 추신추신 -->
+  <select id="getMemberByNo"
+          resultType="MemberDto">
+  SELECT MEMBER_NO, EMAIL, NAME, GENDER
+    FROM MEMBER_T
+   WHERE MEMBER_NO = #{memberNo}
+  </select>
+  
+  <select id="getTotalAddressCountByNo"
+      resultType="int">
+    SELECT COUNT(*)
+      FROM ADDRESS_T
+     WHERE MEMBER_NO = #{memberNo}
+  </select>
+  
+  
+  
+  <!-- 만약 댓글형 게시판이 된다면 이게 댓글 목록이 된다. 지금은 주소라서 있는게 별로 없으니까 하진 않지만, 이게 게시판이라면 여기에 페이징 처리가 필요 -->
+  <!-- MAP으로 받아와서 총 개수도 세주고 상세보기 페이징 처리(댓글창 생각하면 편리) 해줘야함. -->
+  <!--  이런 구성을 front로 표현하진 않고 기록만 남겨둠. 지금 address가 그렇게 많진 않으니까... -->
+  <select id="getAddressListByNo"
+      parameterType="Map"
+          resultType="AddressDto">
+   SELECT ADDRESS_NO, ZONECODE, ADDRESS, DETAIL_ADDRESS, EXTRA_ADDRESS  
+    FROM (SELECT ROW_NUMBER() OVER (ORDER BY ADDRESS_NO DESC) AS RN, ADDRESS_NO, ZONECODE, ADDRESS, DETAIL_ADDRESS, EXTRA_ADDRESS
+            FROM ADDRESS_T
+            WHERE MEMBER_NO = #{memberNo})
+    WHERE RN BETWEEN #{begin} AND #{end}  
+  </select>
+
+  
+</mapper>

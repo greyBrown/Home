@@ -12,7 +12,7 @@ import com.gdu.prj02.dto.ArticleDto;
 @Controller
 public class MyController3 {
   
-  /* 1. HttpServletrequest 를 이용한 요청 파라미터 처리*/
+//  /* 1. HttpServletrequest 를 이용한 요청 파라미터 처리*/
   
   @RequestMapping(value="/article/detail1.do", method=RequestMethod.GET) // <a>태그로 요청했으니까 get방식
   public String detail1(HttpServletRequest request) { // 아하 Controller에서 이렇게 메소드로 처리하니까 switch 문을 한땀한땀 뜨는 수고를 덜어준다!
@@ -55,7 +55,7 @@ public class MyController3 {
    */
   @RequestMapping(value="/article/detail3.do", method=RequestMethod.GET)
   public String detail3(ArticleDto articleDto) {
-    System.out.println("detail3:" + articleDto.getEditor());
+    System.out.println("detail3:" + articleDto.getArticle_no());
     return "index";
   }
   

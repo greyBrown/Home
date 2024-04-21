@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>board List</title>
+<title>board list</title>
 </head>
 <body>
 

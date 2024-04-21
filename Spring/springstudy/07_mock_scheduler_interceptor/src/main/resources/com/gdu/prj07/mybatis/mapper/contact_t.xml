@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gdu.prj07.mybatis.mapper.contact_t">
+
+
+  <insert id="registerContact"
+          parameterType="ContactDto">
+    INSERT INTO CONTACT_T (
+        CONTACT_NO
+      , NAME
+      , MOBILE
+      , EMAIL
+      , ADDRESS
+      , CREATED_AT
+    ) VALUES (
+        CONTACT_SEQ.NEXTVAL
+      , #{name}
+      , #{mobile}
+      , #{email}
+      , #{address}
+      , TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD HH24:MI:SS')
+    )
+  </insert>
+
+  <update id="modifyContact"
+          parameterType="ContactDto">
+    UPDATE CONTACT_T
+       SET NAME = #{name}
+         , MOBILE = #{mobile}
+         , EMAIL = #{email}
+         , ADDRESS = #{address}
+     WHERE CONTACT_NO = #{contactNo}
+  </update>
+
+  <delete id="removeContact">
+    DELETE
+      FROM CONTACT_T
+     WHERE CONTACT_NO = #{contactNo}
+  </delete>
+  
+  <select id="getContactList"
+          resultType="ContactDto">
+   <!-- 주의사항: list가 반환타입이 아니라 ContactDto가 반환타입임을 주의!! -->
+    SELECT CONTACT_NO, NAME, MOBILE, EMAIL, ADDRESS, CREATED_AT
+      FROM CONTACT_T
+     ORDER BY CONTACT_NO DESC
+  </select>
+
+  <select id="getContactByNo"
+          resultType="ContactDto">
+    SELECT CONTACT_NO, NAME, MOBILE, EMAIL, ADDRESS, CREATED_AT
+      FROM CONTACT_T
+     WHERE CONTACT_NO = #{contactNo}
+  </select>
+
+</mapper>

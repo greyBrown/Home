@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- usermapperInterface 와 namespace를 맞춰준다 --> 
+<!--  조건이 IF에 의해 변경될 것 같다면 WHERE을 태그로 달아라. 필요없는 AND를 알아서 생략해준다. pw 하나만 와도 오류 안남 -->
+<mapper namespace="com.gdu.myapp.mapper.UserMapper">
+
+   <select id="getUserByMap"
+          parameterType="Map"
+          resultType="UserDto">
+    SELECT USER_NO, EMAIL, PW, NAME, GENDER, MOBILE, EVENT_AGREE, SIGNUP_KIND, PW_MODIFY_DT, SIGNUP_DT
+      FROM USER_T
+    <where>
+      <if test="email!=null">EMAIL = #{email}</if>
+      <if test="pw!=null">AND PW = #{pw}</if>
+    </where>
+  </select>
+
+<insert id="insertAccessHistory"
+          parameterType="Map">
+ <!-- 이 작업으로 로그아웃버튼 누르고 나간 user의 기록은 남는다. -->
+ <!--  + 세션만료 시간은 스프링을 알 수 있다. 그래서 세션이 만료되어 로그아웃된 기록도 추가할 수 있음 
+ 세션 닫혔나 안닫혔나 보고있는 친구가 HttpSessionListener 1. 세션 새로 만들어짐 2. 세션 종료됨. 이 두가지를 캐치하는 친구임.
+ 자동로그인 할때 쓰는 것도 세션임. 기본적인 아이디어는 사용자 컴퓨터(즉 쿠키)에 정보를 두고 로그인을 시킴. -> 보안상으로 아주 위험함.
+ 대신에 세션 아이디값을 둠. 그 값을 서버에 남겨놓고 사용자는 쿠키로 가지고 있음. 그 쿠키값이랑 동일한 데이터가 DB 있으면 로그인을 시켜줌.
+ 보안문제 때문에 요새는 거의 안씀 ㅎ..... +쿠키는 기본 15일 -->         
+   INSERT INTO ACCESS_HISTORY_T (
+        ACCESS_HISTORY_NO
+      , EMAIL
+      , IP
+      , USER_AGENT
+      , SESSION_ID
+      , SIGNIN_DT
+      , SIGNOUT_DT
+    ) VALUES (
+        ACCESS_HISTORY_SEQ.NEXTVAL
+      , #{email}
+      , #{ip}
+      , #{userAgent}
+      , #{sessionId}
+      , CURRENT_DATE
+      , NULL
+    )
+  </insert>
+  
+  <select id="getLeaveUserByMap"
+          parameterType="Map"
+          resultType="LeaveUserDto">
+  SELECT LEAVE_USER_NO
+    FROM LEAVE_USER_T
+   <where>
+    <if test="email!=null">EMAIL = #{email}</if>
+   </where>        
+          
+  </select>
+          
+          
+          
+  <insert id="insertUser"
+          parameterType="UserDto">
+    INSERT INTO USER_T (
+        USER_NO
+      , EMAIL
+      , PW
+      , NAME
+      , GENDER
+      , MOBILE
+      , EVENT_AGREE
+      , SIGNUP_KIND
+      , PW_MODIFY_DT
+      , SIGNUP_DT  
+     ) VALUES (
+       USER_SEQ.NEXTVAL
+     , #{email}
+     , #{pw}
+     , #{name}
+     , #{gender}
+     , #{mobile}
+     , #{eventAgree}
+     , 0
+     , CURRENT_DATE 
+     , CURRENT_DATE 
+    )
+    <!--  프로젝트 할때 비밀번호 변경후 30일 경과 이런걸 해보는 것도 좋음. current_date로 기록만 남기고 있는데 이제 30일 지나면 비밀번호 바꾸는 페이지로 빼주고...
+    30일 동안 알리지 않기 이런 버튼 추가해주는 것도 있고요(비밀번호 수정일 +30 이런식으로도 함ㅋㅋ 좀더 정식적으로는 칼럼을 추가하는 방법도 있고...)!-->
+    
+  </insert>
+
+<delete id="deleteUser">
+  DELETE 
+  FROM USER_T
+  WHERE USER_NO = #{userNo}
+</delete>
+
+  <update id="updateAccessHistory">
+    UPDATE ACCESS_HISTORY_T
+       SET SIGNOUT_DT = CURRENT_DATE
+     WHERE SIGNOUT_DT = NULL
+       AND SESSION_ID = #{sessionId} 
+  </update>
+
+
+</mapper>
